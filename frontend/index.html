@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>传美实业 · AI 问数</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  .sql-block { font-family: 'Menlo', 'Monaco', monospace; font-size: 13px; }
+  .chat-enter { animation: fadeIn 0.3s ease-in; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .data-table th, .data-table td { padding: 6px 12px; text-align: left; white-space: nowrap; }
+  .data-table tr:hover td { background: #f9fafb; }
+  #chat-box { scroll-behavior: smooth; }
+  .step-active { animation: pulse 1.5s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+  .step-done { opacity: 0.6; }
+  .step-error { color: #ef4444; }
+  .tag { display: inline-block; padding: 1px 8px; border-radius: 9999px; font-size: 12px; margin: 1px 2px; }
+</style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+<div class="max-w-4xl mx-auto w-full px-4 py-6 flex flex-col flex-1">
+  <!-- Header -->
+  <div class="flex items-center gap-3 mb-4 shrink-0">
+    <div class="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">BI</div>
+    <div class="flex-1">
+      <h1 class="text-lg font-bold text-gray-800">传美实业 · AI 问数</h1>
+      <p class="text-xs text-gray-400">自然语言提问，AI 帮你查数据 · 支持追问</p>
+    </div>
+    <button onclick="toggleReports()" class="px-3 py-1.5 bg-white border rounded-lg text-gray-600 hover:border-blue-400 hover:text-blue-600 text-sm flex items-center gap-1">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+      报表目录
+    </button>
+  </div>
+
+  <!-- Report Directory Panel (hidden by default) -->
+  <div id="report-panel" class="hidden mb-4 bg-white rounded-xl border shadow-sm max-h-96 overflow-y-auto">
+    <div class="sticky top-0 bg-white border-b px-4 py-2 flex items-center justify-between">
+      <span class="text-sm font-medium text-gray-700">现有报表目录</span>
+      <button onclick="toggleReports()" class="text-gray-400 hover:text-gray-600">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    <div id="report-tree" class="p-4 text-sm text-gray-500">加载中...</div>
+  </div>
+
+  <!-- Chat Area -->
+  <div id="chat-box" class="flex-1 overflow-y-auto space-y-4 mb-4 min-h-0">
+    <div class="text-center py-12 text-gray-400 text-sm">
+      <p class="mb-2">试试问我：</p>
+      <div class="flex flex-wrap justify-center gap-2">
+        <button onclick="quickAsk('上个月回款总额多少')" class="px-3 py-1.5 bg-white border rounded-full text-gray-600 hover:border-blue-400 hover:text-blue-600 text-sm">上个月回款多少</button>
+        <button onclick="quickAsk('哪个产品卖得最好？前5名')" class="px-3 py-1.5 bg-white border rounded-full text-gray-600 hover:border-blue-400 hover:text-blue-600 text-sm">产品销量排名</button>
+        <button onclick="quickAsk('华东区和华南区上季度销售额对比')" class="px-3 py-1.5 bg-white border rounded-full text-gray-600 hover:border-blue-400 hover:text-blue-600 text-sm">区域销售对比</button>
+        <button onclick="quickAsk('客户欠款排名前10')" class="px-3 py-1.5 bg-white border rounded-full text-gray-600 hover:border-blue-400 hover:text-blue-600 text-sm">客户欠款</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input -->
+  <div class="flex gap-2 shrink-0">
+    <input id="input" type="text" placeholder="输入问题... 支持追问，如「按月拆分一下」"
+      class="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();ask()}">
+    <button id="send-btn" onclick="ask()" class="px-5 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-medium text-sm shrink-0">
+      发送
+    </button>
+  </div>
+</div>
+
+<script>
+const chatHistory = [];
+const chatBox = document.getElementById('chat-box');
+const input = document.getElementById('input');
+let reportData = null;
+let reportPanelOpen = false;
+
+// Load report directory
+async function loadReports() {
+  try {
+    const resp = await fetch('/api/reports');
+    reportData = await resp.json();
+  } catch (e) {
+    console.error('Failed to load reports:', e);
+  }
+}
+
+function toggleReports() {
+  const panel = document.getElementById('report-panel');
+  reportPanelOpen = !reportPanelOpen;
+  if (reportPanelOpen) {
+    panel.classList.remove('hidden');
+    if (!reportData) {
+      loadReports().then(() => renderReportTree());
+    } else {
+      renderReportTree();
+    }
+  } else {
+    panel.classList.add('hidden');
+  }
+}
+
+function renderReportTree() {
+  const tree = document.getElementById('report-tree');
+  if (!reportData) {
+    tree.innerHTML = '加载失败';
+    return;
+  }
+
+  let html = '<div class="space-y-3">';
+  for (const [dir, subdirs] of Object.entries(reportData)) {
+    const totalReports = Object.values(subdirs).reduce((sum, items) => sum + items.length, 0);
+    html += `<div class="report-dir">
+      <div class="font-medium text-gray-700 cursor-pointer hover:text-blue-600 flex items-center gap-1" onclick="this.parentElement.classList.toggle('open')">
+        <svg class="w-3 h-3 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        ${esc(dir)} <span class="text-xs text-gray-400">(${totalReports})</span>
+      </div>
+      <div class="report-subdir hidden ml-4 mt-1 space-y-1">`;
+
+    for (const [subdir, items] of Object.entries(subdirs)) {
+      if (subdir === '_root') {
+        for (const item of items) {
+          html += `<div class="text-xs text-gray-500 hover:text-blue-500 cursor-pointer py-0.5" onclick="quickAsk('帮我查一下${esc(item.name.replace(/\.(cpt|frm)$/, ''))}的数据')">${esc(item.name)}</div>`;
+        }
+      } else {
+        html += `<div class="text-xs text-gray-500">${esc(subdir)} (${items.length})</div>`;
+        for (const item of items.slice(0, 5)) {
+          html += `<div class="text-xs text-gray-400 hover:text-blue-500 cursor-pointer py-0.5 ml-2" onclick="quickAsk('帮我查一下${esc(item.name.replace(/\.(cpt|frm)$/, ''))}的数据')">${esc(item.name)}</div>`;
+        }
+        if (items.length > 5) {
+          html += `<div class="text-xs text-gray-300 ml-2">... 还有 ${items.length - 5} 个</div>`;
+        }
+      }
+    }
+    html += '</div></div>';
+  }
+  html += '</div>';
+  tree.innerHTML = html;
+}
+
+// Add CSS for report directory
+const reportStyle = document.createElement('style');
+reportStyle.textContent = `
+  .report-dir.open .report-subdir { display: block !important; }
+  .report-dir.open svg { transform: rotate(90deg); }
+`;
+document.head.appendChild(reportStyle);
+
+// Load reports on page load
+loadReports();
+
+function quickAsk(q) {
+  input.value = q;
+  ask();
+}
+
+async function ask() {
+  const q = input.value.trim();
+  if (!q) return;
+  input.value = '';
+  input.disabled = true;
+  document.getElementById('send-btn').disabled = true;
+
+  const welcome = chatBox.querySelector('.text-center');
+  if (welcome) welcome.remove();
+
+  appendMessage('user', q);
+
+  // 创建 bot 消息容器（流式填充）
+  const botDiv = createBotMessage();
+
+  try {
+    const resp = await fetch('/api/ask/stream', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        question: q,
+        history: chatHistory.slice(-3),
+      }),
+    });
+
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while (true) {
+      const {done, value} = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, {stream: true});
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || '';
+
+      let eventType = '';
+      for (const line of lines) {
+        if (line.startsWith('event: ')) {
+          eventType = line.slice(7);
+        } else if (line.startsWith('data: ')) {
+          try {
+            const data = JSON.parse(line.slice(6));
+            handleEvent(botDiv, eventType, data, q);
+          } catch(e) {}
+        }
+      }
+    }
+  } catch (e) {
+    botDiv.steps.innerHTML += `<div class="step-error">请求失败: ${esc(e.message)}</div>`;
+  }
+
+  input.disabled = false;
+  document.getElementById('send-btn').disabled = false;
+  input.focus();
+}
+
+function createBotMessage() {
+  const div = document.createElement('div');
+  div.className = 'chat-enter max-w-full';
+
+  const steps = document.createElement('div');
+  steps.className = 'space-y-1 mb-2';
+
+  const content = document.createElement('div');
+  content.className = 'space-y-2 hidden';
+
+  div.appendChild(steps);
+  div.appendChild(content);
+  chatBox.appendChild(div);
+  scrollToBottom();
+
+  return { steps, content, div };
+}
+
+function handleEvent(bot, eventType, data, question) {
+  switch (eventType) {
+    case 'step':
+      addStep(bot.steps, data.text, data.id);
+      break;
+
+    case 'tables':
+      updateStep(bot.steps, 'select', 'done');
+      bot.steps.innerHTML += `<div class="text-xs text-gray-500 pl-5">
+        选择了 <span class="font-medium text-gray-700">${data.tables.length}</span> 张表：
+        ${data.tables.map(t => `<span class="tag bg-blue-100 text-blue-700">${t}</span>`).join('')}
+      </div>`;
+      break;
+
+    case 'schema_done':
+      updateStep(bot.steps, 'schema', 'done');
+      break;
+
+    case 'sql':
+      updateStep(bot.steps, 'sql', 'done');
+      updateStep(bot.steps, 'retry', 'done');
+      // SQL 在 content 区域展示
+      bot.content.classList.remove('hidden');
+      const sqlBlock = document.createElement('div');
+      sqlBlock.innerHTML = `
+        <details class="group" open>
+          <summary class="cursor-pointer text-xs text-gray-500 hover:text-gray-700 select-none">
+            <span class="group-open:hidden">▶ SQL ${data.retry ? '(重试)' : ''}</span>
+            <span class="hidden group-open:inline">▼ SQL ${data.retry ? '(重试)' : ''}</span>
+          </summary>
+          <pre class="sql-block bg-gray-800 text-green-400 p-3 rounded-lg mt-1 overflow-x-auto text-xs">${esc(data.sql)}</pre>
+        </details>`;
+      // 替换之前的 SQL（如果有重试）
+      const oldSql = bot.content.querySelector('.sql-retry-target');
+      if (data.retry && oldSql) {
+        oldSql.replaceWith(sqlBlock);
+      } else {
+        bot.content.appendChild(sqlBlock);
+      }
+      if (data.retry) sqlBlock.classList.add('sql-retry-target');
+      break;
+
+    case 'result':
+      updateStep(bot.steps, 'exec', 'done');
+      bot.content.classList.remove('hidden');
+      bot.content.innerHTML += renderTable(data);
+      break;
+
+    case 'summary':
+      updateStep(bot.steps, 'summary', 'done');
+      bot.content.classList.remove('hidden');
+      bot.content.innerHTML += `
+        <div class="bg-blue-50 border border-blue-100 px-4 py-3 rounded-xl text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
+          ${formatSummary(data.text)}
+        </div>`;
+      break;
+
+    case 'error':
+      markAllStepsDone(bot.steps);
+      bot.content.classList.remove('hidden');
+      bot.content.innerHTML += `<div class="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-sm">${esc(data.text)}</div>`;
+      break;
+
+    case 'done':
+      markAllStepsDone(bot.steps);
+      if (data.tables) {
+        chatHistory.push({
+          q: question,
+          sql: data.sql,
+          summary: '',
+        });
+      }
+      break;
+  }
+  scrollToBottom();
+}
+
+function addStep(container, text, id) {
+  const div = document.createElement('div');
+  div.id = 'step-' + id;
+  div.className = 'flex items-center gap-2 text-sm step-active';
+  div.innerHTML = `
+    <svg class="animate-spin h-3.5 w-3.5 text-blue-500 shrink-0" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+    </svg>
+    <span>${esc(text)}</span>`;
+  container.appendChild(div);
+}
+
+function updateStep(container, id, status) {
+  const el = container.querySelector('#step-' + id);
+  if (!el) return;
+  if (status === 'done') {
+    el.classList.remove('step-active');
+    el.classList.add('step-done');
+    const svg = el.querySelector('svg');
+    if (svg) {
+      svg.outerHTML = `<svg class="h-3.5 w-3.5 text-green-500 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+      </svg>`;
+    }
+  }
+}
+
+function markAllStepsDone(container) {
+  container.querySelectorAll('.step-active').forEach(el => {
+    updateStep(container, el.id.replace('step-', ''), 'done');
+  });
+}
+
+function renderTable(data) {
+  const maxRows = 50;
+  const rows = (data.rows || []).slice(0, maxRows);
+  if (!data.columns || data.row_count === 0) {
+    return `<div class="text-sm text-gray-500 italic">查询返回 0 行结果</div>`;
+  }
+  return `<div class="overflow-x-auto rounded-lg border bg-white">
+    <div class="text-xs text-gray-400 px-3 py-1.5 border-b">${data.row_count} 行${data.row_count > maxRows ? ` (显示前 ${maxRows} 行)` : ''}</div>
+    <table class="data-table text-sm w-full">
+      <thead class="bg-gray-50 text-gray-600 text-xs"><tr>${data.columns.map(c => `<th>${esc(c)}</th>`).join('')}</tr></thead>
+      <tbody class="divide-y divide-gray-50">${rows.map(row =>
+        '<tr>' + data.columns.map(c => `<td>${row[c] != null ? esc(String(row[c])) : ''}</td>`).join('') + '</tr>'
+      ).join('')}</tbody>
+    </table></div>`;
+}
+
+function appendMessage(type, text) {
+  const div = document.createElement('div');
+  div.className = 'chat-enter';
+  if (type === 'user') {
+    div.className += ' flex justify-end';
+    div.innerHTML = `<div class="bg-blue-600 text-white px-4 py-2.5 rounded-2xl rounded-tr-sm max-w-[80%] text-sm">${esc(text)}</div>`;
+  }
+  chatBox.appendChild(div);
+  scrollToBottom();
+}
+
+function scrollToBottom() {
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function formatSummary(s) {
+  return esc(s).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,643 @@
+{
+  "total_queries": 110,
+  "by_type": {
+    "每日数据": 23,
+    "区域数据": 16,
+    "整体数据": 15,
+    "分公司看板": 14,
+    "客户数据": 12,
+    "订单数据": 10,
+    "商品数据": 6,
+    "回款数据": 6,
+    "发货数据": 4,
+    "区域数据详情": 2,
+    "其他查询": 1,
+    "总裁的预支收益": 1
+  },
+  "simple_queries": [
+    {
+      "name": "股东分红查询",
+      "type": "其他查询",
+      "sql_key": "founderIncome",
+      "reason": "简单查询，适合自然语言替代"
+    },
+    {
+      "name": "查询分公司",
+      "type": "分公司看板",
+      "sql_key": "searchBranchOffice",
+      "reason": "简单查询，适合自然语言替代"
+    },
+    {
+      "name": "默认分公司",
+      "type": "分公司看板",
+      "sql_key": "defaultBranchOffice",
+      "reason": "简单查询，适合自然语言替代"
+    },
+    {
+      "name": "区域列表",
+      "type": "区域数据",
+      "sql_key": "regionList",
+      "reason": "简单查询，适合自然语言替代"
+    }
+  ],
+  "complex_queries": [
+    {
+      "name": "分公司信息",
+      "type": "分公司看板",
+      "sql_key": "branchOfficeInfo",
+      "complexity": "1792 字符, 3 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "单品销售情况",
+      "type": "分公司看板",
+      "sql_key": "businessCustomerSaleInfo",
+      "complexity": "1181 字符, 2 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "各类型钱包余额",
+      "type": "分公司看板",
+      "sql_key": "branchBalanceCompositionDetails",
+      "complexity": "3645 字符, 4 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "各股东贡献情况",
+      "type": "分公司看板",
+      "sql_key": "branchOfficeFounderProffer",
+      "complexity": "4308 字符, 6 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "回款数据",
+      "type": "分公司看板",
+      "sql_key": "branchPaymentData",
+      "complexity": "4181 字符, 6 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "提货利润占比",
+      "type": "分公司看板",
+      "sql_key": "pickUpProfitProportion",
+      "complexity": "1698 字符, 2 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "核心指标",
+      "type": "分公司看板",
+      "sql_key": "branchOfficeCustData",
+      "complexity": "3996 字符, 6 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "股东收益情况",
+      "type": "分公司看板",
+      "sql_key": "branchOfficeFounderIncome",
+      "complexity": "3437 字符, 13 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "订单数据",
+      "type": "分公司看板",
+      "sql_key": "businessOrderData",
+      "complexity": "1420 字符, 1 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "详情-股东明细",
+      "type": "分公司看板",
+      "sql_key": "branchOfficeFounderDetail",
+      "complexity": "7921 字符, 17 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "今日实时",
+      "type": "区域数据",
+      "sql_key": "regionDataToday",
+      "complexity": "4892 字符, 8 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "分公司单品销售情况",
+      "type": "区域数据",
+      "sql_key": "regionSingleGoodsSaleInfo",
+      "complexity": "1791 字符, 3 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "分公司架构",
+      "type": "区域数据",
+      "sql_key": "regionBranchOffice",
+      "complexity": "1840 字符, 7 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "区域分公司等级评级",
+      "type": "区域数据",
+      "sql_key": "regionBranchOfficeLevel",
+      "complexity": "1852 字符, 0 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "区域分布",
+      "type": "区域数据",
+      "sql_key": "regionDistribution",
+      "complexity": "1097 字符, 3 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "商品销售情况",
+      "type": "区域数据",
+      "sql_key": "regionGoodsSaleInfo",
+      "complexity": "2066 字符, 1 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "总公司架构",
+      "type": "区域数据",
+      "sql_key": "regionHeadOffice",
+      "complexity": "1482 字符, 6 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "排行榜",
+      "type": "区域数据",
+      "sql_key": "regionTheCharts",
+      "complexity": "8402 字符, 17 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "详情-回款详情-分公司",
+      "type": "区域数据",
+      "sql_key": "regionBranchOfficeTotalAmount",
+      "complexity": "3274 字符, 4 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "详情-回款详情-股东",
+      "type": "区域数据",
+      "sql_key": "regionFounderTotalAmount",
+      "complexity": "2032 字符, 7 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "详情-已激活分公司",
+      "type": "区域数据",
+      "sql_key": "regionBranchOfficeActive",
+      "complexity": "2216 字符, 9 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "详情-新增分公司",
+      "type": "区域数据",
+      "sql_key": "regionBranchOfficeDetail",
+      "complexity": "1428 字符, 7 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "详情-新增小股东",
+      "type": "区域数据",
+      "sql_key": "regionPersonalFounderDetail",
+      "complexity": "2355 字符, 10 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "详情-新增总监",
+      "type": "区域数据",
+      "sql_key": "regionCoFounderDetail",
+      "complexity": "2245 字符, 10 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "首单订单详情",
+      "type": "区域数据详情",
+      "sql_key": "firstOrderDetail",
+      "complexity": "1798 字符, 5 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "黑晶四件套订单详情",
+      "type": "区域数据详情",
+      "sql_key": "598Detail",
+      "complexity": "1906 字符, 4 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "商品数据-分公司采购排名",
+      "type": "商品数据",
+      "sql_key": "goodBCompanyPurchase",
+      "complexity": "1567 字符, 5 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "商品数据-区域占比",
+      "type": "商品数据",
+      "sql_key": "goodRegionRate",
+      "complexity": "1475 字符, 2 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "商品数据-商品销售目标",
+      "type": "商品数据",
+      "sql_key": "goodSaleTarget",
+      "complexity": "1893 字符, 2 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "商品数据-库销比",
+      "type": "商品数据",
+      "sql_key": "goodStockSaleRate",
+      "complexity": "1865 字符, 4 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "商品数据-热销省份",
+      "type": "商品数据",
+      "sql_key": "goodProvinceSales",
+      "complexity": "1313 字符, 2 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "区域回款占比",
+      "type": "回款数据",
+      "sql_key": "regionPaymentCollectionRatio",
+      "complexity": "2239 字符, 1 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "即将到期提货券余额及人数",
+      "type": "回款数据",
+      "sql_key": "expiredPromotionPutData",
+      "complexity": "1252 字符, 1 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "各类型钱包余额",
+      "type": "回款数据",
+      "sql_key": "balanceCompositionDetails",
+      "complexity": "3477 字符, 4 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "总公司回款排名",
+      "type": "回款数据",
+      "sql_key": "headOfficePaymentRanking",
+      "complexity": "1531 字符, 2 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "参与活动客户占比数据",
+      "type": "客户数据",
+      "sql_key": "customerPromotionData",
+      "complexity": "3821 字符, 3 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "客户数据-分公司架构",
+      "type": "客户数据",
+      "sql_key": "customBranchOffice",
+      "complexity": "1825 字符, 6 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "客户数据-大区分布",
+      "type": "客户数据",
+      "sql_key": "customRegion",
+      "complexity": "2260 字符, 3 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "客户数据-年龄分布新客户",
+      "type": "客户数据",
+      "sql_key": "customSexNew",
+      "complexity": "1116 字符, 3 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "客户数据-总公司架构",
+      "type": "客户数据",
+      "sql_key": "customHeadOffice",
+      "complexity": "1433 字符, 5 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "终端会员",
+      "type": "客户数据",
+      "sql_key": "customMember",
+      "complexity": "1526 字符, 4 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "h5小程序的预支收益",
+      "type": "总裁的预支收益",
+      "sql_key": "founderAdvanceProfits",
+      "complexity": "2106 字符, 10 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "分公司评级",
+      "type": "整体数据",
+      "sql_key": "wholeBranchOfficeLevel",
+      "complexity": "1742 字符, 0 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "剩余余额明细-分公司",
+      "type": "整体数据",
+      "sql_key": "remainingBalanceDetailsBranchOffice",
+      "complexity": "2998 字符, 5 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "剩余余额明细-总公司",
+      "type": "整体数据",
+      "sql_key": "remainingBalanceDetailsHeadOffice",
+      "complexity": "3002 字符, 5 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "回款目标",
+      "type": "整体数据",
+      "sql_key": "targetPaymentCollection",
+      "complexity": "3723 字符, 0 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "客户剩余余额占比",
+      "type": "整体数据",
+      "sql_key": "remainingBalanceRate",
+      "complexity": "4084 字符, 5 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "客户数据",
+      "type": "整体数据",
+      "sql_key": "wholeCustData",
+      "complexity": "4681 字符, 13 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "排行榜",
+      "type": "整体数据",
+      "sql_key": "wholeTheCharts",
+      "complexity": "8705 字符, 17 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "提货占比",
+      "type": "整体数据",
+      "sql_key": "pickUpProportion",
+      "complexity": "6142 字符, 5 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "整体数据-分公司目标",
+      "type": "整体数据",
+      "sql_key": "wholeBranchOffice",
+      "complexity": "4382 字符, 11 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "整体数据-商品销售top10",
+      "type": "整体数据",
+      "sql_key": "wholeGoodSaleTop10",
+      "complexity": "2278 字符, 5 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "整体数据-总公司数量",
+      "type": "整体数据",
+      "sql_key": "wholeHeadOffice",
+      "complexity": "1783 字符, 5 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "整体数据-股东数量",
+      "type": "整体数据",
+      "sql_key": "wholeFounder",
+      "complexity": "1497 字符, 3 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "活动回款人数占比",
+      "type": "整体数据",
+      "sql_key": "regionNumberPromotionRatio",
+      "complexity": "2537 字符, 1 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "活动回款金额占比",
+      "type": "整体数据",
+      "sql_key": "promotionAmountRadio1",
+      "complexity": "3385 字符, 6 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "活动回款金额占比",
+      "type": "整体数据",
+      "sql_key": "regionPaymentPromotionRatio",
+      "complexity": "2120 字符, 1 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "回款数据",
+      "type": "每日数据",
+      "sql_key": "walletData",
+      "complexity": "2863 字符, 4 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "客户数据",
+      "type": "每日数据",
+      "sql_key": "customerData",
+      "complexity": "6794 字符, 11 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "每日数据-今日商品销售情况",
+      "type": "每日数据",
+      "sql_key": "orderGoodsSale",
+      "complexity": "5234 字符, 9 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "每日数据-发货数据",
+      "type": "每日数据",
+      "sql_key": "deliverData",
+      "complexity": "1959 字符, 1 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "每日数据-已发货省份占比",
+      "type": "每日数据",
+      "sql_key": "deliverProvince",
+      "complexity": "1978 字符, 0 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "每日数据-订单数据",
+      "type": "每日数据",
+      "sql_key": "orderData",
+      "complexity": "2348 字符, 2 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "每日数据-订单来源",
+      "type": "每日数据",
+      "sql_key": "orderSource",
+      "complexity": "1061 字符, 1 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "缺货情况",
+      "type": "每日数据",
+      "sql_key": "outOfStock",
+      "complexity": "1905 字符, 3 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "补货计划",
+      "type": "每日数据",
+      "sql_key": "replenishmentPlan",
+      "complexity": "2033 字符, 3 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "订单数据总数",
+      "type": "每日数据",
+      "sql_key": "orderDataOverview",
+      "complexity": "1296 字符, 1 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "详情-分公司回款",
+      "type": "每日数据",
+      "sql_key": "dailyBranchOfficeTotalAmount",
+      "complexity": "2285 字符, 5 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "详情-已激活分公司",
+      "type": "每日数据",
+      "sql_key": "dailyBranchOfficeActive",
+      "complexity": "1993 字符, 8 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "详情-已激活小股东",
+      "type": "每日数据",
+      "sql_key": "dailyPersonalFounderActive",
+      "complexity": "2782 字符, 11 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "详情-已激活总监",
+      "type": "每日数据",
+      "sql_key": "dailyCoFounderActive",
+      "complexity": "2776 字符, 11 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "详情-新增分公司",
+      "type": "每日数据",
+      "sql_key": "dailyBranchOfficeDetail",
+      "complexity": "1458 字符, 7 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "详情-新增小股东",
+      "type": "每日数据",
+      "sql_key": "dailyPersonalFounderDetail",
+      "complexity": "2275 字符, 10 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "详情-新增总监",
+      "type": "每日数据",
+      "sql_key": "dailyCoFounderDetail",
+      "complexity": "2269 字符, 10 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "详情-股东回款",
+      "type": "每日数据",
+      "sql_key": "dailyFounderTotalAmount",
+      "complexity": "2015 字符, 8 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "详情-首单订单",
+      "type": "每日数据",
+      "sql_key": "dailyFirstOrderDetail",
+      "complexity": "1775 字符, 5 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "各身份售后占比",
+      "type": "订单数据",
+      "sql_key": "orderDataAfterSaleIdentityProportion",
+      "complexity": "1215 字符, 1 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "各身份订单占比",
+      "type": "订单数据",
+      "sql_key": "orderDataIdentityProportion",
+      "complexity": "1364 字符, 1 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "订单平均发货时长",
+      "type": "订单数据",
+      "sql_key": "orderDeliveryTimeCategory",
+      "complexity": "1367 字符, 1 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    },
+    {
+      "name": "订单数据",
+      "type": "订单数据",
+      "sql_key": "orderDataAllData",
+      "complexity": "1647 字符, 0 个 JOIN",
+      "reason": "复杂查询，建议保留原报表"
+    }
+  ],
+  "common_tables": [],
+  "recommendations": [
+    {
+      "category": "可自然语言替代",
+      "count": 4,
+      "examples": [
+        "股东分红查询",
+        "查询分公司",
+        "默认分公司",
+        "区域列表"
+      ],
+      "suggestion": "这些简单查询可以用自然语言直接提问，无需保留原报表"
+    },
+    {
+      "category": "建议保留原报表",
+      "count": 80,
+      "examples": [
+        "分公司信息",
+        "单品销售情况",
+        "各类型钱包余额",
+        "各股东贡献情况",
+        "回款数据"
+      ],
+      "suggestion": "这些复杂查询涉及多表关联、CTE、子查询等，建议保留原报表，NL2SQL作为补充"
+    },
+    {
+      "category": "高频查询",
+      "count": 10,
+      "examples": [
+        "回款数据",
+        "订单数据",
+        "客户数据",
+        "发货数据",
+        "商品数据"
+      ],
+      "suggestion": "这些是业务核心查询，建议优先优化NL2SQL的准确率"
+    }
+  ]
+}
