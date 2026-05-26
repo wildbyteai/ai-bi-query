@@ -20,7 +20,7 @@ def sse_event(event: str, data) -> str:
     return f"event: {event}\ndata: {json.dumps(data, ensure_ascii=False, cls=DecimalEncoder)}\n\n"
 
 
-app = FastAPI(title="传美实业 BI 问数")
+app = FastAPI(title="AI BI 问数")
 
 
 class AskRequest(BaseModel):
